@@ -36,9 +36,9 @@ struct Post {
         self.username = username
     }
     
-    init?(dictionary: [String : Any]) {
+    init?(identifier: String, dictionary: [String : Any]) {
         
-        guard let identifier = dictionary[identifierKey] as? UUID
+        guard let uuid = UUID(uuidString: identifier)
             , let text = dictionary[textKey] as? String
             , let timestamp = dictionary[timestampKey] as? TimeInterval
             , let username = dictionary[usernameKey] as? String
@@ -48,7 +48,7 @@ struct Post {
                 return nil
         }
         
-        self.identifier = identifier
+        self.identifier = uuid
         self.text = text
         self.timestamp = timestamp
         self.username = username
