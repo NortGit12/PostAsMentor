@@ -109,6 +109,54 @@ class PostListTableViewController: UITableViewController, PostControllerDelegate
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
         self.refreshControl?.endRefreshing()
     }
+    
+    func presentNewPostAlert() {
+        
+        let alertController = UIAlertController(title: "New Post", message: "Create a new post", preferredStyle: .alert)
+        
+        var usernameTextField = UITextField()
+        alertController.addTextField { (usernameTF) in
+            
+            usernameTF.placeholder = "Username..."
+            usernameTextField = usernameTF
+        }
+        
+        var messageTextField = UITextField()
+        alertController.addTextField { (messageTF) in
+            
+            messageTF.placeholder = "Message..."
+            messageTextField = messageTF
+        }
+        
+        let postAction = UIAlertAction(title: "Post", style: .default) { (action) in
+            
+            guard let username = usernameTextField.text , username.characters.count > 0
+                , let text = messageTextField.text , text.characters.count > 0 
+                else {
+                    
+                    NSLog("Error: Username and/or Text was empty.")
+                    return
+            }
+            
+            self.postController.addPost(forUser: username, withText: text)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        alertController.addAction(postAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    //==================================================
+    // MARK: - Actions
+    //==================================================
+    
+    @IBAction func addButtonTapped(_ sender: UIButton) {
+        
+        presentNewPostAlert()
+    }
 
     /*
     // MARK: - Navigation
@@ -121,3 +169,18 @@ class PostListTableViewController: UITableViewController, PostControllerDelegate
     */
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
