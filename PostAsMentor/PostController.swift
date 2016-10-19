@@ -22,7 +22,7 @@ class PostController {
     static let baseURL = URL(string: "https://devmtn-post.firebaseio.com/posts")
     static let postEndpoint = baseURL?.appendingPathExtension("json").absoluteString
     
-    static var posts = [Post]() {
+    var posts = [Post]() {
         
         didSet{
             
@@ -30,7 +30,7 @@ class PostController {
         }
     }
     
-    static var youak: PostControllerDelegate?
+    var youak: PostControllerDelegate?
     
     //==================================================
     // MARK: - Initializers
@@ -38,16 +38,16 @@ class PostController {
     
     init() {
         
-        PostController.fetchPosts()
+        fetchPosts()
     }
     
     //==================================================
     // MARK: - Methods
     //==================================================
     
-    static func fetchPosts(completion: ((_ posts: [Post]?) -> Void)? = nil) {
+    func fetchPosts(completion: ((_ posts: [Post]?) -> Void)? = nil) {
         
-        guard let postEndpoint = postEndpoint
+        guard let postEndpoint = PostController.postEndpoint
             , let url = URL(string: postEndpoint)
             else {
             
