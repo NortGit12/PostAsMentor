@@ -96,4 +96,60 @@ class PostController {
             }
         }
     }
+    
+    func addPost(forUser username: String, withText text: String) {
+        
+        let post = Post(username: username, text: text)
+        guard let url = post.endpoint else { return }
+        
+        NetworkController.performRequest(for: url, httpMethod: .Put, body: post.jsonData) { (data, error) in
+            
+            guard let data = data
+                ,let responseDataString = String(data: data, encoding: .utf8)
+                else { return }
+            
+            if let error = error {
+                
+                NSLog("Received an error code when attempting to access the endpoint.  Error: \(error.localizedDescription)")
+                
+            } else if responseDataString.contains("error") {
+                
+                NSLog("Received an error when attempting to access the endpoint.")
+                
+            } else {
+                
+                NSLog("Accessed the endpoint successfully.")
+            }
+        }
+        
+        fetchPosts()
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
