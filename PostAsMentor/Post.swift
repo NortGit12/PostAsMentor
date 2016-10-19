@@ -24,6 +24,27 @@ struct Post {
     private let timestampKey = "timestamp"
     private let usernameKey = "username"
     
+    var endpoint: URL? {
+        
+        guard let extendedURL = PostController.baseURL?.appendingPathComponent(self.identifier.uuidString)
+            else { return nil }
+        return extendedURL.appendingPathExtension("json")
+    }
+    
+    var jsonValue: [String : Any] {
+        
+        return [identifierKey: self.identifier.uuidString
+            , textKey: self.text
+            , timestampKey: self.timestamp
+            , usernameKey: self.username
+        ]
+    }
+    
+    var jsonData: Data? {
+        
+        return try? JSONSerialization.data(withJSONObject: jsonValue, options: .prettyPrinted)
+    }
+    
     //==================================================
     // MARK: - Initializers
     //==================================================
