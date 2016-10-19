@@ -97,6 +97,23 @@ class PostListTableViewController: UITableViewController, PostControllerDelegate
     }
     
     //==================================================
+    // MARK: - UITableViewDelegate
+    //==================================================
+    
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        if indexPath.row > postController.posts.count {
+            
+            postController.fetchPosts(reset: false, completion: { (posts) in
+                
+                if let posts = posts {
+                    self.tableView.reloadData()
+                }
+            })
+        }
+    }
+    
+    //==================================================
     // MARK: - Methods
     //==================================================
     
