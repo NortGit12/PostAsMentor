@@ -45,7 +45,7 @@ class PostController {
     // MARK: - Methods
     //==================================================
     
-    func fetchPosts(completion: ((_ posts: [Post]?) -> Void)? = nil) {
+    func fetchPosts(reset: Bool = true, completion: ((_ posts: [Post]?) -> Void)? = nil) {
         
         guard let postEndpoint = PostController.postEndpoint
             , let url = URL(string: postEndpoint)
@@ -60,7 +60,15 @@ class PostController {
                 return
         }
         
-        NetworkController.performRequest(for: url, httpMethod: .Get) { (data, error) in
+        let queryEndInterval = reset ? NSDate().timeIntervalSince1970 : posts.last?.queryTimestamp ?? NSDate().timeIntervalSince1970
+        
+        let urlParameters = [
+            "orderBy": "\"timestamp\"",
+            "endAt": "\(queryEndInterval)",
+            "limitToLast": "15",
+            ]
+        
+        NetworkController.performRequest(for: url, httpMethod: .Get, urlParameters: urlParameters) { (data, error) in
             
             /*
             {
@@ -86,7 +94,16 @@ class PostController {
             
             let posts = jsonDictionary.flatMap({ Post(identifier: $0.key, dictionary: $0.value) })
             let sortedPosts = posts.sorted(by: { $0.timestamp > $1.timestamp })
-            self.posts = sortedPosts
+            
+            if reset {
+                
+                self.posts = sortedPosts
+                
+            } else {
+                
+                self.posts.append(contentsOf: sortedPosts)
+                
+            }
                 
             DispatchQueue.main.async {
                 

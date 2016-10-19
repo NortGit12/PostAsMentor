@@ -45,6 +45,11 @@ struct Post {
         return try? JSONSerialization.data(withJSONObject: jsonValue, options: .prettyPrinted)
     }
     
+    var queryTimestamp: TimeInterval {
+        
+        return timestamp - 0.000001
+    }
+    
     //==================================================
     // MARK: - Initializers
     //==================================================
